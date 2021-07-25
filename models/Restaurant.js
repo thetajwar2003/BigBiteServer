@@ -43,14 +43,8 @@ const restaurantSchema = new mongoose.Schema({
         type: String,
         min: 10
     },
-    schedule: {
-        type: Array,
-        required: true
-    },
-    menu: {
-        type: Array,
-        required: True
-    }
+    schedule: [],
+    menu: []
 });
 
 module.exports = mongoose.model("Restaurant", restaurantSchema);
