@@ -5,8 +5,8 @@ const cors = require("cors");
 require('dotenv/config');
 
 // routes
-const userRoute = require("./routes/userAuth");
-const restaurantRoute = require("./routes/restaurantAuth");
+const userRoute = require("./routes/user");
+const restaurantRoute = require("./routes/restaurant");
 
 // middleware
 app.use(cors());

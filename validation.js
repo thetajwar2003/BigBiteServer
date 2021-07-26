@@ -1,5 +1,7 @@
 const Joi = require("@hapi/joi");
 
+// USER VALIDATIONS
+
 // user register validation
 const userRegisterValidation = (data) => {
     const schema = Joi.object({
@@ -22,6 +24,8 @@ const userLoginValidation = (data) => {
     return schema.validate(data);
 };
 
+// RESTAURANT VALIDATIONS
+
 // restaurant register validation
 const restaurantRegisterValidation = (data) => {
     const schema = Joi.object({
@@ -43,7 +47,18 @@ const restaurantLoginValidation = (data) => {
     return schema.validate(data);
 };
 
+// restaurant add item to menu
+const restaurantAddItem = (data) => {
+    const schema = Joi.object({
+        itemName: Joi.string().required(),
+        price: Joi.number().required(),
+        description: Joi.string()
+    });
+    return schema.validate(data);
+};
+
 module.exports.userRegisterValidation = userRegisterValidation;
 module.exports.userLoginValidation = userLoginValidation;
 module.exports.restaurantRegisterValidation = restaurantRegisterValidation;
 module.exports.restaurantLoginValidation = restaurantLoginValidation;
+module.exports.restaurantAddItem = restaurantAddItem;

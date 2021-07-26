@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const Restaurant = require("../models/Restaurant");
 const { restaurantRegisterValidation, restaurantLoginValidation } = require("../validation");
+const menuRoute = require("./menu");
 
 router.post("/", (req, res) => {
     res.send("restaurant account settings");
@@ -58,5 +59,9 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign({ _id: restaurant._id }, process.env.RESTAURANT_TOKEN_SECRET);
     res.status(200).header("auth-token", token).send(token);
 });
+
+
+// middleware function
+router.use("/menu", menuRoute);
 
 module.exports = router;
