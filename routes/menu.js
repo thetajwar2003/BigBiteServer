@@ -61,7 +61,7 @@ router.delete("/:itemId", validateRestaurantToken, async (req, res) => {
 
     // delete the item from the menu
     try {
-        const remove = await restaurant.update({
+        const remove = await restaurant.updateOne({
             $pull: { menu: deletingItem }
         });
         res.status(200).send({ message: "Removed" });
@@ -70,9 +70,42 @@ router.delete("/:itemId", validateRestaurantToken, async (req, res) => {
     }
 });
 
-// TODO: update item
+// update item in menu
 router.patch("/:itemId", validateRestaurantToken, async (req, res) => {
-    res.send("update item");
+    // validate the item info that is coming in
+    const { error } = restaurantAddItem(req.body);
+    if (error) return res.status(400).send({ message: "Error adding item to your menu" });
+
+    const restaurant = await Restaurant.findById(req.restaurant._id);
+
+    // delete the existing item
+    const deletingItem = restaurant.menu.find(function (item, index) {
+        if (item._id == req.params.itemId) return true;
+        else return false;
+    });
+
+    // create a new item object with the same id
+    const item = new Menu({
+        _id: req.params.itemId,
+        itemName: req.body.itemName,
+        price: req.body.price,
+        description: req.body.description
+    });
+
+    // update the item
+    try {
+        // delete method
+        const deleted = await restaurant.updateOne(
+            { $pull: { menu: deletingItem } },
+        );
+        // push method
+        const replaced = await restaurant.updateOne({
+            $push: { menu: item }
+        });
+        res.status(200).send({ message: "Updated" });
+    } catch (err) {
+        res.status(400).send({ message: err });
+    }
 });
 
 module.exports = router;
