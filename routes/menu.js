@@ -17,7 +17,7 @@ router.get("/", validateRestaurantToken, async (req, res) => {
     }
 });
 
-// TODO: add item to menu
+// add item to menu
 router.post("/add", validateRestaurantToken, async (req, res) => {
     // validate the item info that is coming in
     const { error } = restaurantAddItem(req.body);
@@ -49,13 +49,29 @@ router.post("/add", validateRestaurantToken, async (req, res) => {
     }
 });
 
-// TODO: delete item to menu
-router.delete("/delete", validateRestaurantToken, async (req, res) => {
-    res.send("delete item");
+// delete item from menu
+router.delete("/:itemId", validateRestaurantToken, async (req, res) => {
+    const restaurant = await Restaurant.findById(req.restaurant._id);
+
+    // find item that will be deleted
+    const deletingItem = restaurant.menu.find(function (item, index) {
+        if (item._id == req.params.itemId) return true;
+        else return false;
+    });
+
+    // delete the item from the menu
+    try {
+        const remove = await restaurant.update({
+            $pull: { menu: deletingItem }
+        });
+        res.status(200).send({ message: "Removed" });
+    } catch (err) {
+        res.status(400).send({ message: err });
+    }
 });
 
 // TODO: update item
-router.patch("/update", validateRestaurantToken, async (req, res) => {
+router.patch("/:itemId", validateRestaurantToken, async (req, res) => {
     res.send("update item");
 });
 
