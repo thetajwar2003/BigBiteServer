@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 // listen to server
-app.listen(3000);
+app.listen(5000);
 
 // routes middleware
 app.use("/api/user", userRoute);
