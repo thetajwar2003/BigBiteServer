@@ -61,14 +61,14 @@ router.post('/login', async (req, res) => {
 // get list of restaurants
 router.get("/", validateUserToken, async (req, res) => {
     const restaurants = await Restaurant.find({}, { _id: 1, restaurantName: 1, location: 1 });
-    if (restaurants) return res.status(200).send({ message: restaurants });
+    if (restaurants) return res.status(200).send({ restaurants: restaurants });
     else return res.status(400).send({ message: "Error in retrieving restaurants data" });
 });
 
 // get info of specific restaurant
 router.get("/:restaurantId", validateUserToken, async (req, res) => {
     const restaurant = await Restaurant.find({ _id: req.params.restaurantId }, { password: 0 });
-    if (restaurant) return res.status(200).send({ message: restaurant });
+    if (restaurant) return res.status(200).send(restaurant[0]);
     else return res.status(400).send({ message: "Error in retrieving restaurant data" });
 });
 
@@ -81,7 +81,7 @@ router.get("/:restaurantId/:itemId", validateUserToken, async (req, res) => {
         else return false;
     });
 
-    if (specificItem) return res.status(200).send({ message: specificItem });
+    if (specificItem) return res.status(200).send(specificItem);
     else return res.status(400).send({ message: "Item does not exist" });
 });
 
@@ -102,7 +102,7 @@ router.post("/:restaurantId/:itemId", validateUserToken, async (req, res) => {
         const update = await user.updateOne({
             $push: { bag: cartItem }
         });
-        if (update) return res.status(200).send({ message: user.bag });
+        if (update) return res.status(200).send(user.bag);
     } catch (err) {
         res.status(400).send({ message: err });
     }
