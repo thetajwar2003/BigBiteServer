@@ -11,7 +11,7 @@ const { restaurantAddItem } = require("../validation");
 router.get("/", validateRestaurantToken, async (req, res) => {
     try {
         const restaurant = await Restaurant.findById(req.restaurant._id);
-        res.status(200).send({ menu: restaurant.menu });
+        res.status(200).send(restaurant.menu);
     } catch (err) {
         res.status(400).send({ message: err });
     }

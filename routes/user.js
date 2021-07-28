@@ -55,7 +55,7 @@ router.post('/login', async (req, res) => {
 
     // create and sign token if email and password are valid
     const token = jwt.sign({ _id: user._id }, process.env.USER_TOKEN_SECRET);
-    res.status(200).header("auth-token", token).send(token);
+    res.status(200).header("auth-token", token).send({ "token": token });
 });
 
 // get list of restaurants
@@ -86,7 +86,7 @@ router.get("/:restaurantId/:itemId", validateUserToken, async (req, res) => {
 });
 
 // add item to cart
-router.post("/:restaurantId/:itemId/add", validateUserToken, async (req, res) => {
+router.post("/:restaurantId/:itemId", validateUserToken, async (req, res) => {
     const user = await User.findById(req.user._id);
     const restaurant = await Restaurant.findById(req.params.restaurantId);
 
@@ -108,9 +108,11 @@ router.post("/:restaurantId/:itemId/add", validateUserToken, async (req, res) =>
     }
 });
 
+// TODO: get user's bag
+// TODO: get user's order history
 // TODO: delete from cart
 // TODO: update quantity 
-
-
+// TODO: checkout 
+// TODO: update user's order history after checkout
 
 module.exports = router;
