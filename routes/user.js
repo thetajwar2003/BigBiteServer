@@ -3,11 +3,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
+const Restaurant = require("../models/Restaurant");
 const { userRegisterValidation, userLoginValidation } = require("../validation");
-
-router.post("/", (req, res) => {
-    res.send("account settings");
-});
+const { validateUserToken } = require("./validateToken");
 
 router.post("/register", async (req, res) => {
     // validate the data that is being sent
@@ -59,5 +57,60 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign({ _id: user._id }, process.env.USER_TOKEN_SECRET);
     res.status(200).header("auth-token", token).send(token);
 });
+
+// get list of restaurants
+router.get("/", validateUserToken, async (req, res) => {
+    const restaurants = await Restaurant.find({}, { _id: 1, restaurantName: 1, location: 1 });
+    if (restaurants) return res.status(200).send({ message: restaurants });
+    else return res.status(400).send({ message: "Error in retrieving restaurants data" });
+});
+
+// get info of specific restaurant
+router.get("/:restaurantId", validateUserToken, async (req, res) => {
+    const restaurant = await Restaurant.find({ _id: req.params.restaurantId }, { password: 0 });
+    if (restaurant) return res.status(200).send({ message: restaurant });
+    else return res.status(400).send({ message: "Error in retrieving restaurant data" });
+});
+
+// get info of specific item
+router.get("/:restaurantId/:itemId", validateUserToken, async (req, res) => {
+    const restaurant = await await Restaurant.findById(req.params.restaurantId);
+
+    const specificItem = restaurant.menu.find(function (item, index) {
+        if (item._id == req.params.itemId) return true;
+        else return false;
+    });
+
+    if (specificItem) return res.status(200).send({ message: specificItem });
+    else return res.status(400).send({ message: "Item does not exist" });
+});
+
+// add item to cart
+router.post("/:restaurantId/:itemId/add", validateUserToken, async (req, res) => {
+    const user = await User.findById(req.user._id);
+    const restaurant = await Restaurant.findById(req.params.restaurantId);
+
+    const specificItem = restaurant.menu.find(function (item, index) {
+        if (item._id == req.params.itemId) return true;
+        else return false;
+    });
+
+    if (specificItem) var cartItem = { ...specificItem, quantity: 1 };
+    else return res.status(400).send({ message: "Item does not exist" });
+
+    try {
+        const update = await user.updateOne({
+            $push: { bag: cartItem }
+        });
+        if (update) return res.status(200).send({ message: user.bag });
+    } catch (err) {
+        res.status(400).send({ message: err });
+    }
+});
+
+// TODO: delete from cart
+// TODO: update quantity 
+
+
 
 module.exports = router;
