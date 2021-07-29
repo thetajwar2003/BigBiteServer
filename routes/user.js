@@ -144,7 +144,7 @@ router.post("/checkout", validateUserToken, async (req, res) => {
             const update = await user.updateOne({
                 $push: { pastOrders: [{ ...user.bag, date: Date.now() }] }
             });
-            if (update) return res.status(200).send({ pastOrders: user.pastOrders });
+            if (update) return res.status(200).send({ "message": "Checkout Successful" });
         } catch (err) {
             res.status(400).send({ message: err });
         }

@@ -231,6 +231,164 @@ Error:
 }
 ```
 
+#### **User: Get Bag**
+
+```http
+GET /api/user/bag
+```
+
+Input
+| Header | Type | Description |
+| :----------- | :---------- | :---------------------------------------------------- |
+| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in. |
+
+Outputs
+
+```http
+Success:
+{
+  "bag": [
+    {
+      "_id": String,
+      "itemName": String,
+      "price": Number,
+      "description": String,
+      "quantity": Number
+    },
+  ]
+}
+
+Error:
+{
+  "message": Error Description
+}
+```
+
+#### **User: Get Order History**
+
+```http
+GET /api/user/pastOrders
+```
+
+Input
+| Header | Type | Description |
+| :----------- | :---------- | :---------------------------------------------------- |
+| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in. |
+
+Outputs
+
+```http
+Success:
+{
+  "pastOrders": [
+    {
+      "_id": String,
+      "itemName": String,
+      "price": Number,
+      "description": String
+    },
+    "date": Date
+  ]
+}
+
+Error:
+{
+  "message": Error Description
+}
+```
+
+#### **User: Checkout**
+
+```http
+POST /api/user/checkout
+```
+
+Input
+| Header | Type | Description |
+| :----------- | :---------- | :---------------------------------------------------- |
+| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in. |
+
+Outputs
+
+```http
+Success:
+{
+  "message": "Checkout Successful"
+}
+
+Error:
+{
+  "message": Error Description
+}
+```
+
+#### **User: Add Item To Bag**
+
+```http
+POST /api/user/:restaurantId/:itemId
+```
+
+Input
+
+| Header       | Type        | Description                                           |
+| :----------- | :---------- | :---------------------------------------------------- |
+| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in. |
+
+| Parameter | Type     | Description                        |
+| :-------- | :------- | :--------------------------------- |
+| `itemId`  | `String` | **Required**: Id of specific item. |
+
+Outputs
+
+```http
+Success:
+{
+  "message": "Removed"
+}
+
+Error:
+{
+  "message": Error Description
+}
+```
+
+#### **User: Update Item In Bag**
+
+```http
+PATCH /api/user/:restaurantId/:itemId
+```
+
+Input
+
+```http
+{
+  "quantity": Number
+}
+```
+
+| Header       | Type        | Description                                           |
+| :----------- | :---------- | :---------------------------------------------------- |
+| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in. |
+
+| Parameter      | Type     | Description                              |
+| :------------- | :------- | :--------------------------------------- |
+| `restaurantId` | `String` | **Required**: Id of specific restaurant. |
+| `itemId`       | `String` | **Required**: Id of specific item.       |
+
+Outputs
+
+```http
+Success:
+{
+  "message": "Updated"
+}
+
+Error:
+{
+  "message": Error Description
+}
+```
+
 ### Restaurant Endpoints
 
 #### **Restaurant: Login**
