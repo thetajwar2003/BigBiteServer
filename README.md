@@ -1,8 +1,6 @@
-
 # BigBite (Server-Side Application)
 
-Backend program for food delivery application; similar to existing products like Grubhub, UberEats, DoorDash, etc.
-
+Backend program for food delivery application; similar to existing products like GrubHub, UberEats, DoorDash, etc.
 
 ## API Reference
 
@@ -15,12 +13,14 @@ POST /api/user/login
 ```
 
 Input
+
 ```http
 {
   "email": String,
   "password": String (Hashed)
 }
 ```
+
 Outputs
 
 ```http
@@ -40,8 +40,10 @@ Error:
 ```http
 POST /api/user/register
 ```
+
 Input
-``` http
+
+```http
 {
   "email": String,
   "password": String,
@@ -57,8 +59,10 @@ Input
   "phone": String
 }
 ```
+
 Outputs
-``` http
+
+```http
 Success:
 {
   "id": String
@@ -70,28 +74,33 @@ Error:
 }
 ```
 
-#### User: Get All Restaurants Infos
+#### User: Get List Of Restaurants
 
-``` http
+```http
 GET /api/user/
 ```
+
 Input
-| Header | Type     | Description                |
+| Header | Type | Description |
 | :-------- | :------- | :------------------------- |
-| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in.  |
+| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in. |
 
 Outputs
-``` http
+
+```http
 Success:
 {
-  "_id": String,
-  "restaurantName": String,
-  "location": {
+  restaurants: [
+    "_id": String,
+    "restaurantName": String,
+    "location": {
       "address": String,
       "apt": String,
       "city": String,
       "state": String,
       "zip": String
+    }
+  ],
 }
 
 Error:
@@ -101,47 +110,47 @@ Error:
 ```
 
 #### **User: Get Details on Specific Restaurant**
-``` http
-GET /api/user/:retuarantId
-```
-Input
-| Header | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in.  |
 
-| Parameter | Type     | Description                |
+```http
+GET /api/user/:restaurantId
+```
+
+Input
+| Header | Type | Description |
 | :-------- | :------- | :------------------------- |
-| `restaurantId` | `String` | **Required**: Id of specific restaurant.  |
+| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in. |
+
+| Parameter      | Type     | Description                              |
+| :------------- | :------- | :--------------------------------------- |
+| `restaurantId` | `String` | **Required**: Id of specific restaurant. |
 
 Outputs
-``` http
-Success: 
+
+```http
+Success:
 {
-  "message": [
+  "location": {
+    "address": String,
+    "apt": String,
+    "city": String,
+    "state": String,
+    "zip": String
+  },
+  "schedule": [],
+  "menu": [
     {
-      "location": {
-        "address": String,
-        "apt": String,
-        "city": String,
-        "state": String,
-        "zip": String
-      },
-      "schedule": [],
-      "menu": [
-        {
-          "_id": String,
-          "itemName": String,
-          "price": Number,
-          "description": String
-        }
-      ],
       "_id": String,
-      "restaurantName": String,
-      "email": String,
-      "phone": String,
+      "itemName": String,
+      "price": Number,
+      "description": String
     }
-  ]
+  ],
+  "_id": String,
+  "restaurantName": String,
+  "email": String,
+  "phone": String,
 }
+
 
 Error:
 {
@@ -150,22 +159,25 @@ Error:
 ```
 
 #### **User: Get Details on Specific Item From Specific Restaurant**
-``` http
-GET /api/user/:retuarantId/:itemId
-```
-Input
-| Header | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in.  |
 
-| Parameter | Type     | Description                |
+```http
+GET /api/user/:restaurantId/:itemId
+```
+
+Input
+| Header | Type | Description |
 | :-------- | :------- | :------------------------- |
-| `restaurantId` | `String` | **Required**: Id of specific restaurant.  |
-| `itemId` | `String` | **Required**: Id of specific item.  |
+| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in. |
+
+| Parameter      | Type     | Description                              |
+| :------------- | :------- | :--------------------------------------- |
+| `restaurantId` | `String` | **Required**: Id of specific restaurant. |
+| `itemId`       | `String` | **Required**: Id of specific item.       |
 
 Outputs
-``` http
-Success: 
+
+```http
+Success:
 {
   "_id": String,
   "itemName": String,
@@ -180,27 +192,32 @@ Error:
 ```
 
 #### **User: Add Item To Bag**
-``` http
-POST /api/user/:retuarantId/:itemId
+
+```http
+POST /api/user/:restaurantId/:itemId
 ```
+
 Input
-``` http
+
+```http
 {
   "quantity": Number
 }
 ```
-| Header | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in.  |
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `restaurantId` | `String` | **Required**: Id of specific restaurant.  |
-| `itemId` | `String` | **Required**: Id of specific item.  |
+| Header       | Type        | Description                                           |
+| :----------- | :---------- | :---------------------------------------------------- |
+| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in. |
+
+| Parameter      | Type     | Description                              |
+| :------------- | :------- | :--------------------------------------- |
+| `restaurantId` | `String` | **Required**: Id of specific restaurant. |
+| `itemId`       | `String` | **Required**: Id of specific item.       |
 
 Outputs
-``` http
-Success: 
+
+```http
+Success:
 {
   "_id": String,
   "itemName": String,
@@ -214,19 +231,181 @@ Error:
 }
 ```
 
+#### **User: Get Bag**
+
+```http
+GET /api/user/bag
+```
+
+Input
+| Header | Type | Description |
+| :----------- | :---------- | :---------------------------------------------------- |
+| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in. |
+
+Outputs
+
+```http
+Success:
+{
+  "bag": [
+    {
+      "_id": String,
+      "itemName": String,
+      "price": Number,
+      "description": String,
+      "quantity": Number
+    },
+  ]
+}
+
+Error:
+{
+  "message": Error Description
+}
+```
+
+#### **User: Get Order History**
+
+```http
+GET /api/user/pastOrders
+```
+
+Input
+| Header | Type | Description |
+| :----------- | :---------- | :---------------------------------------------------- |
+| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in. |
+
+Outputs
+
+```http
+Success:
+{
+  "pastOrders": [
+    {
+      "_id": String,
+      "itemName": String,
+      "price": Number,
+      "description": String
+    },
+    "date": Date
+  ]
+}
+
+Error:
+{
+  "message": Error Description
+}
+```
+
+#### **User: Checkout**
+
+```http
+POST /api/user/checkout
+```
+
+Input
+| Header | Type | Description |
+| :----------- | :---------- | :---------------------------------------------------- |
+| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in. |
+
+Outputs
+
+```http
+Success:
+{
+  "message": "Checkout Successful"
+}
+
+Error:
+{
+  "message": Error Description
+}
+```
+
+#### **User: Delete Item Off Bag**
+
+```http
+POST /api/user/:itemId
+```
+
+Input
+
+| Header       | Type        | Description                                           |
+| :----------- | :---------- | :---------------------------------------------------- |
+| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in. |
+
+| Parameter | Type     | Description                        |
+| :-------- | :------- | :--------------------------------- |
+| `itemId`  | `String` | **Required**: Id of specific item. |
+
+Outputs
+
+```http
+Success:
+{
+  "message": "Removed"
+}
+
+Error:
+{
+  "message": Error Description
+}
+```
+
+#### **User: Update Item In Bag**
+
+```http
+PATCH /api/user/:restaurantId/:itemId
+```
+
+Input
+
+```http
+{
+  "quantity": Number
+}
+```
+
+| Header       | Type        | Description                                           |
+| :----------- | :---------- | :---------------------------------------------------- |
+| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in. |
+
+| Parameter      | Type     | Description                              |
+| :------------- | :------- | :--------------------------------------- |
+| `restaurantId` | `String` | **Required**: Id of specific restaurant. |
+| `itemId`       | `String` | **Required**: Id of specific item.       |
+
+Outputs
+
+```http
+Success:
+{
+  "message": "Updated"
+}
+
+Error:
+{
+  "message": Error Description
+}
+```
+
 ### Restaurant Endpoints
-#### **Retaurant: Login**
+
+#### **Restaurant: Login**
+
 ```
 POST /api/restaurant/login
 ```
 
 Input
+
 ```http
 {
   "email": String,
   "password": String (Hashed)
 }
 ```
+
 Outputs
 
 ```http
@@ -246,8 +425,10 @@ Error:
 ```http
 POST /api/restaurant/register
 ```
+
 Input
-``` http
+
+```http
 {
   "email": String,
   "password": String,
@@ -262,8 +443,10 @@ Input
   "phone": String
 }
 ```
+
 Outputs
-``` http
+
+```http
 Success:
 {
   "id": String
@@ -276,17 +459,20 @@ Error:
 ```
 
 #### **Restaurant: Get Menu**
-``` http
+
+```http
 GET /api/restaurant/menu
 ```
+
 Input
-| Header | Type     | Description                |
+| Header | Type | Description |
 | :-------- | :------- | :------------------------- |
-| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in.  |
+| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in. |
 
 Outputs
-``` http
-Success: 
+
+```http
+Success:
 {
   "_id": String,
   "itemName": String,
@@ -301,11 +487,14 @@ Error:
 ```
 
 #### **Restaurant: Add Item To Menu**
-``` http
+
+```http
 POST /api/restaurant/menu/add
 ```
+
 Input
-``` http
+
+```http
 {
   "_id": String,
   "itemName": String,
@@ -313,13 +502,15 @@ Input
   "description": String
 }
 ```
-| Header | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in.  |
+
+| Header       | Type        | Description                                           |
+| :----------- | :---------- | :---------------------------------------------------- |
+| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in. |
 
 Outputs
-``` http
-Success: 
+
+```http
+Success:
 {
   "message": "Success"
 }
@@ -330,24 +521,26 @@ Error:
 }
 ```
 
-
 #### **Restaurant: Remove Item From Menu**
-``` http
+
+```http
 DELETE /api/restaurant/menu/:itemId
 ```
+
 Input
 
-| Header | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in.  |
+| Header       | Type        | Description                                           |
+| :----------- | :---------- | :---------------------------------------------------- |
+| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in. |
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `itemId` | `String` | **Required**: Id of specific item.  |
+| Parameter | Type     | Description                        |
+| :-------- | :------- | :--------------------------------- |
+| `itemId`  | `String` | **Required**: Id of specific item. |
 
 Outputs
-``` http
-Success: 
+
+```http
+Success:
 {
   "message": "Removed"
 }
@@ -358,14 +551,16 @@ Error:
 }
 ```
 
-
 #### **Restaurant: Update Item From Menu**
-``` http
+
+```http
 PATCH /api/restaurant/menu/:itemId
 ```
+
 Input
 Input
-``` http
+
+```http
 {
   "itemName": String,
   "price": Number,
@@ -373,17 +568,18 @@ Input
 }
 ```
 
-| Header | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in.  |
+| Header       | Type        | Description                                           |
+| :----------- | :---------- | :---------------------------------------------------- |
+| `auth-token` | `JWT Token` | **Required**: The token returned when the logging in. |
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `itemId` | `String` | **Required**: Id of specific item.  |
+| Parameter | Type     | Description                        |
+| :-------- | :------- | :--------------------------------- |
+| `itemId`  | `String` | **Required**: Id of specific item. |
 
 Outputs
-``` http
-Success: 
+
+```http
+Success:
 {
   "message": "Updated"
 }
