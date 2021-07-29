@@ -322,10 +322,10 @@ Error:
 }
 ```
 
-#### **User: Add Item To Bag**
+#### **User: Delete Item Off Bag**
 
 ```http
-POST /api/user/:restaurantId/:itemId
+POST /api/user/:itemId
 ```
 
 Input
